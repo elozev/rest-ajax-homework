@@ -39,4 +39,21 @@ public class CarService {
     public int getNextId() {
         return carList.size() + 1;
     }
+
+    public Car getById(int id) {
+        return carList.get(id);
+    }
+
+    public void updateCar(int i, Car car) {
+        Car updateCar = carList.get(i);
+        updateCar.setManufacturer(car.getManufacturer());
+        updateCar.setModel(car.getModel());
+        updateCar.setYear(car.getYear());
+        carList.remove(i);
+        carList.add(i, car);
+    }
+
+    public void deleteCar(int i) {
+        carList.remove(i);
+    }
 }
