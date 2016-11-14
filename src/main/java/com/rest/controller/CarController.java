@@ -22,8 +22,27 @@ public class CarController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Car> getCars(){
-        return carService.getCarList();
+    public List<Car> getCars(@DefaultValue("")@QueryParam("manufacturer") String manufacturer,
+                             @DefaultValue("")@QueryParam("model") String model,
+                             @DefaultValue("1")@QueryParam("year") String year,
+                             @DefaultValue("")@QueryParam("engine") String engineType){
+
+
+        if(manufacturer.equals("")
+                && model.equals("")
+                && year.equals("1")
+                && engineType.equals("")){
+            return carService.getCarList();
+        }else if(!manufacturer.equals("")){
+            return carService.getByManufacturer(manufacturer);
+        }else if(!model.equals("")){
+            return carService.getByModel(model);
+        }else if(!engineType.equals("")){
+            return carService.getByEngineType(engineType);
+        }else if(!year.equals("1")){
+            return carService.getByYear(Integer.parseInt(year));
+        }
+        return null;
     }
 
     @GET
