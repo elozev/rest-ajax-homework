@@ -1,21 +1,16 @@
 package com.rest.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.rest.service.CarService;
 
 /**
  * Created by emil on 11/13/16.
  */
-@ApiModel
+//@ApiModel
 public class Car {
 
-    @ApiModelProperty(required = true)
     private int id;
-    @ApiModelProperty(value = "manufacturer")
     private String manufacturer;
-    @ApiModelProperty(value = "model")
     private String model;
-    @ApiModelProperty(value = "year")
     private int year;
 
     public Car(int id, String manufacturer, String model, int year) {
@@ -24,6 +19,15 @@ public class Car {
         this.model = model;
         this.year = year;
     }
+
+    public Car(String manufacturer, String model, int year) {
+        this(CarService.getInstance().getNextId(), manufacturer, model, year);
+    }
+
+    public Car() {
+        this("", "", 1);
+    }
+
 
     public int getId() {
         return id;

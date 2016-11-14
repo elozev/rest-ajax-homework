@@ -35,4 +35,8 @@ public class CarService {
     public boolean addCar(Car car){
         return carList.add(car);
     }
+
+    public int getNextId() {
+        return carList.size() + 1;
+    }
 }

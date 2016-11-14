@@ -14,7 +14,6 @@ import javax.ws.rs.core.Response;
  */
 
 @Path("/cars")
-@Api("cars")
 public class CarController {
 
     private CarService carService;
@@ -28,12 +27,10 @@ public class CarController {
     }
 
     @POST
-    @Path("/post")
     @Consumes(MediaType.APPLICATION_JSON)
-    //@Produces(MediaType.TEXT_XML)
-    public void addCar(Car car){
-        String result = "Added: " + carService.addCar(car);
-        //return Response.status(201).entity(result).build();
+    public Response addCar(Car car){
+        carService.addCar(car);
+        return Response.ok().build();
     }
 
 }
