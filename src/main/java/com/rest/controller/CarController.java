@@ -24,13 +24,13 @@ public class CarController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Car> getCars(@DefaultValue("")@QueryParam("manufacturer") String manufacturer,
                              @DefaultValue("")@QueryParam("model") String model,
-                             @DefaultValue("1")@QueryParam("year") String year,
+                             @DefaultValue("")@QueryParam("year") String year,
                              @DefaultValue("")@QueryParam("engine") String engineType){
 
 
         if(manufacturer.equals("")
                 && model.equals("")
-                && year.equals("1")
+                && year.equals("")
                 && engineType.equals("")){
             return carService.getCarList();
         }else if(!manufacturer.equals("")){
@@ -39,7 +39,7 @@ public class CarController {
             return carService.getByModel(model);
         }else if(!engineType.equals("")){
             return carService.getByEngineType(engineType);
-        }else if(!year.equals("1")){
+        }else if(!year.equals("")){
             return carService.getByYear(Integer.parseInt(year));
         }
         return null;
