@@ -2,7 +2,8 @@
  * Created by emil on 11/16/16.
  */
 
-var currentPageLoaded = 0
+var currentPageLoaded = 0;
+var isGettingRequest = true;
 
 function addCar() {
     $.ajax({
@@ -54,6 +55,7 @@ function loadCarsFromApi() {
             $.each(data, function (index) {
                 loadIntoTable(data[index]);
             })
+            isGettingRequest = true;
         },
         error: function () {
             $('#noMoreToLoad').empty();
@@ -85,7 +87,8 @@ $(document).ready(function () {
 });
 
 $(window).scroll(function () {
-    if($(window).scrollTop() + $(window).height() > $(document).height()) {
+    if ($(window).scrollTop() + $(window).height() >= $('body').height() && isGettingRequest){
+        isGettingRequest = false;
         loadCarsFromApi();
     }
 })
