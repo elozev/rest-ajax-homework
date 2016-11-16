@@ -5,6 +5,8 @@ import com.rest.model.Car;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
@@ -24,10 +26,19 @@ public class CarService {
     private List<Car> carList = new ArrayList<>();
 
     public CarService() {
-        carList.add(new Car(1, "BMW", "530d", "Diesel", 2004));
-        carList.add(new Car(2, "Nissan", "Silvia S15", "Gasoline", 1999));
-        carList.add(new Car(3, "Ford", "Mustang", "Gasoline", 2011));
-        carList.add(new Car(4, "Tesla", "Model X", "Electric", 2015));
+        String[] manufactures = {"BMW", "Nissan", "Tesla", "Lada", "Ford", "Mercedes", "Toyota"};
+        String[] models = {"Model A", "Model B", "Model C", "Model D", "Model E", "Model G"};
+        String[] engines = {"Diesel", "Gasoline", "Electric", "Hybrid", "LPG"};
+
+        for(int i = 0; i < 100; i++){
+            Random random = new Random();
+            carList.add(new Car(i + 1,
+                    manufactures[random.nextInt(manufactures.length)],
+                    models[random.nextInt(models.length)],
+                    engines[random.nextInt(engines.length)],
+                    random.nextInt(2016 - 1900 + 1) + 1900));
+            System.out.println("Car List Size: " + carList.size());
+        }
     }
 
     public List<Car> getCarList() {
@@ -35,6 +46,9 @@ public class CarService {
     }
 
     public boolean addCar(Car car) {
+        if (car.getId() == 0) {
+            car.setId(getNextId());
+        }
         return carList.add(car);
     }
 
@@ -74,5 +88,17 @@ public class CarService {
 
     public List<Car> getByYear(int year) {
         return carList.stream().filter(car -> car.getYear() == year).collect(Collectors.toList());
+    }
+
+    public List<Car> getByPage(int pageNumber) {
+        int start = pageNumber * 10;
+        int end = start + 10;
+
+        if(end > carList.size() && start > carList.size()){
+            return null;
+        } else if(end > carList.size() && start < carList.size()){
+            end = carList.size();
+        }
+        return carList.subList(start, end);
     }
 }

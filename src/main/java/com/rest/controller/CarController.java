@@ -2,9 +2,6 @@ package com.rest.controller;
 
 import com.rest.model.Car;
 import com.rest.service.CarService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.jaxrs.PATCH;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -22,25 +19,32 @@ public class CarController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Car> getCars(@DefaultValue("")@QueryParam("manufacturer") String manufacturer,
-                             @DefaultValue("")@QueryParam("model") String model,
-                             @DefaultValue("")@QueryParam("year") String year,
-                             @DefaultValue("")@QueryParam("engine") String engineType){
+    public Response getCars(@DefaultValue("") @QueryParam("page") String page,
+                             @DefaultValue("") @QueryParam("manufacturer") String manufacturer,
+                             @DefaultValue("") @QueryParam("model") String model,
+                             @DefaultValue("") @QueryParam("year") String year,
+                             @DefaultValue("") @QueryParam("engine") String engineType) {
 
 
-        if(manufacturer.equals("")
+        if (manufacturer.equals("")
                 && model.equals("")
                 && year.equals("")
-                && engineType.equals("")){
-            return carService.getCarList();
-        }else if(!manufacturer.equals("")){
-            return carService.getByManufacturer(manufacturer);
-        }else if(!model.equals("")){
-            return carService.getByModel(model);
-        }else if(!engineType.equals("")){
-            return carService.getByEngineType(engineType);
-        }else if(!year.equals("")){
-            return carService.getByYear(Integer.parseInt(year));
+                && engineType.equals("")
+                && page.equals("")) {
+            return Response.ok(carService.getCarList()).build();
+        } else if (!manufacturer.equals("")) {
+            return Response.ok(carService.getByManufacturer(manufacturer)).build();
+        } else if (!model.equals("")) {
+            return Response.ok(carService.getByModel(model)).build();
+        } else if (!engineType.equals("")) {
+            return Response.ok(carService.getByEngineType(engineType)).build();
+        } else if (!year.equals("")) {
+            return Response.ok(carService.getByYear(Integer.parseInt(year))).build();
+        } else if(!page.equals("")){
+            if(carService.getByPage(Integer.parseInt(page)) != null){
+                return Response.ok(carService.getByPage(Integer.parseInt(page))).build();
+            }
+            return Response.status(416).build();
         }
         return null;
     }
@@ -48,23 +52,23 @@ public class CarController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Car getCarById(@PathParam("id") String id){
+    public Car getCarById(@PathParam("id") String id) {
         return carService.getById(Integer.parseInt(id) - 1);
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
-    public String addCar(Car car){
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addCar(Car car) {
         carService.addCar(car);
-        return "Created car with id: " + car.getId();
+        return Response.ok(car).build();
     }
 
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String putCar(@PathParam("id") String id,Car car){
+    public String putCar(@PathParam("id") String id, Car car) {
         carService.updateCar(Integer.parseInt(id) - 1, car);
         return "Updated car with id: " + id;
     }
@@ -72,7 +76,7 @@ public class CarController {
     @DELETE
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public String patchCar(@PathParam("id") String id){
+    public String patchCar(@PathParam("id") String id) {
         carService.deleteCar(Integer.parseInt(id) - 1);
         return "Deleted car with id: " + id;
     }

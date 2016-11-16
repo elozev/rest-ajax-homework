@@ -66,5 +66,6 @@
     <orderEntry type="library" name="Gradle: io.swagger:swagger-annotations:1.5.0" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.4.2" level="project" />
     <orderEntry type="library" name="Gradle: org.javassist:javassist:3.18.2-GA" level="project" />
+    <orderEntry type="library" name="jquery-DefinitelyTyped" level="application" />
   </component>
 </module>
