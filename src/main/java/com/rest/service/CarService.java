@@ -30,7 +30,7 @@ public class CarService {
         String[] models = {"Model A", "Model B", "Model C", "Model D", "Model E", "Model G"};
         String[] engines = {"Diesel", "Gasoline", "Electric", "Hybrid", "LPG"};
 
-        for(int i = 0; i < 100; i++){
+        for(int i = 0; i < 1000; i++){
             Random random = new Random();
             carList.add(new Car(i + 1,
                     manufactures[random.nextInt(manufactures.length)],

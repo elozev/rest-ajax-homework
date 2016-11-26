@@ -21,10 +21,10 @@ public class CarController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCars(@DefaultValue("") @QueryParam("page") String page,
-                             @DefaultValue("") @QueryParam("manufacturer") String manufacturer,
-                             @DefaultValue("") @QueryParam("model") String model,
-                             @DefaultValue("") @QueryParam("year") String year,
-                             @DefaultValue("") @QueryParam("engine") String engineType) {
+                            @DefaultValue("") @QueryParam("manufacturer") String manufacturer,
+                            @DefaultValue("") @QueryParam("model") String model,
+                            @DefaultValue("") @QueryParam("year") String year,
+                            @DefaultValue("") @QueryParam("engine") String engineType) {
 
         List<List<Car>> lists = new ArrayList<>();
         List<Car> manufacturers = null;
@@ -39,39 +39,42 @@ public class CarController {
                 && engineType.equals("")
                 && page.equals("")) {
             return Response.ok(carService.getCarList()).build();
-        }
-        else if (!manufacturer.equals("")) {
-            manufacturers = new ArrayList<>(carService.getByManufacturer(manufacturer));
-            lists.add(manufacturers);
-//            return Response.ok(carService.getByManufacturer(manufacturer)).build();
+        } else if (!manufacturer.equals("") && !model.equals("") && !year.equals("") && !engineType.equals("")) {
+            List<Car> returnList = new ArrayList<>(carService.getByManufacturer(manufacturer));
+            returnList.retainAll(carService.getByModel(model));
+            returnList.retainAll(carService.getByYear(Integer.parseInt(year)));
+            returnList.retainAll(carService.getByEngineType("Diesel"));
+            return Response.ok(returnList).build();
+        } else if (!manufacturer.equals("") && !model.equals("") && !engineType.equals("")){
+            List<Car> returnList = new ArrayList<>(carService.getByManufacturer(manufacturer));
+            returnList.retainAll(carService.getByModel(model));
+            returnList.retainAll(carService.getByEngineType(engineType));
+            return Response.ok(returnList).build();
+        } else if (!manufacturer.equals("") && !model.equals("") && !year.equals("")) {
+            List<Car> returnList = new ArrayList<>(carService.getByManufacturer(manufacturer));
+            returnList.retainAll(carService.getByModel(model));
+            returnList.retainAll(carService.getByYear(Integer.parseInt(year)));
+            return Response.ok(returnList).build();
+        } else if (!manufacturer.equals("") && !model.equals("")) {
+            List<Car> returnList = new ArrayList<>(carService.getByManufacturer(manufacturer));
+            returnList.retainAll(carService.getByModel(model));
+            return Response.ok(returnList).build();
+        } else if (!manufacturer.equals("")) {
+            return Response.ok(carService.getByManufacturer(manufacturer)).build();
         } else if (!model.equals("")) {
-            models = new ArrayList<>(carService.getByModel(model));
-            lists.add(models);
-//            return Response.ok(carService.getByModel(model)).build();
+            return Response.ok(carService.getByModel(model)).build();
         } else if (!engineType.equals("")) {
-            engineTypes = new ArrayList<>(carService.getByEngineType(engineType));
-            lists.add(engineTypes);
-//            return Response.ok(carService.getByEngineType(engineType)).build();
+            return Response.ok(carService.getByEngineType(engineType)).build();
         } else if (!year.equals("")) {
-            years = new ArrayList<>(carService.getByYear(Integer.parseInt(year)));
-            lists.add(years);
-//            return Response.ok(carService.getByYear(Integer.parseInt(year))).build();
-        } else if(!page.equals("")){
-            if(carService.getByPage(Integer.parseInt(page)) != null){
+            return Response.ok(carService.getByYear(Integer.parseInt(year))).build();
+        } else if (!page.equals("")) {
+            if (carService.getByPage(Integer.parseInt(page)) != null) {
                 return Response.ok(carService.getByPage(Integer.parseInt(page))).build();
             }
             return Response.status(416).build();
         }
 
-        List<Car> returnList = new ArrayList<>(carService.getCarList());
-        for(List<Car> list: lists){
-            if (list != null) {
-                returnList.retainAll(list);
-            }
-        }
-
-
-        return Response.ok(returnList).build();
+        return null;
     }
 
     @GET
