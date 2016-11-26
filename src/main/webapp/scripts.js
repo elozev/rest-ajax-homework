@@ -87,7 +87,7 @@ $(document).ready(function () {
 });
 
 $(window).scroll(function () {
-    if ($(window).scrollTop() + $(window).height() >= $('body').height() && isGettingRequest){
+if ($(window).scrollTop() + $(window).height() >= $('body').height() && isGettingRequest){
         isGettingRequest = false;
         loadCarsFromApi();
     }
