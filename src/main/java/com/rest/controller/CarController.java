@@ -32,6 +32,9 @@ public class CarController {
         List<Car> years = null;
         List<Car> engineTypes = null;
 
+        //TODO : Save all params in a List
+        //TODO : Iritate through the list and check if param is null
+        //TODO : method witch accepts param and list
 
         if (manufacturer.equals("")
                 && model.equals("")
