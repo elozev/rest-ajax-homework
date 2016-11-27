@@ -1,11 +1,11 @@
-<%--
+<!--
   Created by IntelliJ IDEA.
   User: emil
   Date: 11/13/16
   Time: 9:52 PM
   To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %> -->
 <html>
 <head>
     <title>Car Search</title>
@@ -37,7 +37,6 @@
     </div>
 
 
-
     <div class="form-group">
         <label for="engineType">Engine Type</label>
         <select class="form-control" id="engineType">
@@ -56,8 +55,8 @@
             <script>
                 var myDate = new Date();
                 var year = myDate.getFullYear();
-                for(var i = 1900; i <= year; i++){
-                    document.write('<option value="'+i+'">'+i+'</option>');
+                for (var i = 1900; i <= year; i++) {
+                    document.write('<option value="' + i + '">' + i + '</option>');
                 }
             </script>
         </select>
@@ -72,10 +71,51 @@
     <table class="table" id="carsTable">
         <thead>
         <tr>
-            <th>Manufacturer</th>
-            <th>Model</th>
-            <th>Engine Type</th>
-            <th>Year</th>
+            <th>
+                <div class="form-group">
+                    <label for="filterInputManufacturer">Manufacturer</label>
+                    <input type="text" size="1" class="form-control" id="filterInputManufacturer"
+                           aria-describedby="emailHelp"
+                           placeholder="Enter Manufacturer">
+                </div>
+            </th>
+
+            <th>
+                <div class="form-group">
+                    <label for="filterInputModel">Model</label>
+                    <input type="text" size="1" class="form-control" id="filterInputModel" aria-describedby="emailHelp"
+                           placeholder="Enter Model">
+                </div>
+            </th>
+
+            <th>
+                <div class="form-group">
+                    <label for="filterEngineType">Engine Type</label>
+                    <select class="form-control" id="filterEngineType">
+                        <option selected value=""> -- select  -- </option>
+                        <option>Diesel</option>
+                        <option>Gasoline</option>
+                        <option>Hybrid</option>
+                        <option>Electric</option>
+                        <option>LPG</option>
+                    </select>
+                </div>
+            </th>
+
+            <th>
+                <div class="form-group">
+                    <label for="filterYearSelect">Year</label>
+                    <select class="form-control" id="filterYearSelect">
+                        <script>
+                            var myDate = new Date();
+                            var year = myDate.getFullYear();
+                            for (var i = 1900; i <= year; i++) {
+                                document.write('<option value="' + i + '">' + i + '</option>');
+                            }
+                        </script>
+                    </select>
+                </div>
+            </th>
         </tr>
         </thead>
 

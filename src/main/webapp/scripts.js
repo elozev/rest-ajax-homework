@@ -5,6 +5,11 @@
 var currentPageLoaded = 0;
 var isGettingRequest = true;
 
+var filterManufacturer = "";
+var filterModel = "";
+var filterEngine = "";
+var filterYear = "";
+
 function addCar() {
     $.ajax({
         url: "http://localhost:8080/rest-ajax-homework/api/cars",
@@ -14,13 +19,13 @@ function addCar() {
         data: JSON.stringify({
             manufacturer: $('#inputManufacturer').val(),
             model: $('#inputModel').val(),
-            engineType : $('#engineType').val(),
-            year : $('#yearSelect').val()
+            engineType: $('#engineType').val(),
+            year: $('#yearSelect').val()
         }),
         success: function (newCar) {
             loadIntoTable(newCar);
         },
-        error:function () {
+        error: function () {
             alert("Such car already exists");
         },
         complete: function () {
@@ -33,7 +38,7 @@ function addCar() {
 }
 
 
-function loadIntoTable( newCar) {
+function loadIntoTable(newCar) {
     var tr = $('<tr>');
     tr.append('<td>' + newCar.manufacturer + '</td>');
     tr.append('<td>' + newCar.model + '</td>');
@@ -48,8 +53,8 @@ function loadCarsFromApi() {
         url: "http://localhost:8080/rest-ajax-homework/api/cars",
         type: "GET",
         dataType: "json",
-        data:{
-            "page" : currentPageLoaded++
+        data: {
+            "page": currentPageLoaded++
         },
         success: function (data) {
             $.each(data, function (index) {
@@ -70,6 +75,23 @@ function loadCarsFromApi() {
 
 $(document).ready(function () {
 
+    $('input#filterInputManufacturer').on('change', function() {
+
+    });
+
+    $('input#filterInputModel').on('change', function() {
+        alert( this.value );
+    });
+
+    $('select#filterYearSelect').on('change', function() {
+        alert( this.value );
+    });
+    $('select#filterEngineType').on('change', function() {
+        alert( this.value );
+    });
+
+
+
     loadCarsFromApi();
 
     $('form').submit(function (e) {
@@ -86,12 +108,14 @@ $(document).ready(function () {
     })
 });
 
+
+
 $(window).scroll(function () {
-if ($(window).scrollTop() + $(window).height() >= $('body').height() && isGettingRequest){
+    if ($(window).scrollTop() + $(window).height() >= $('body').height() && isGettingRequest) {
         isGettingRequest = false;
         loadCarsFromApi();
     }
-})
+});
 
 
 
