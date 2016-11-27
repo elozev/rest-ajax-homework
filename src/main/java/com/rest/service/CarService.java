@@ -2,10 +2,7 @@ package com.rest.service;
 
 import com.rest.model.Car;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -90,7 +87,7 @@ public class CarService {
         return carList.stream().filter(car -> car.getYear() == year).collect(Collectors.toList());
     }
 
-    public List<Car> getByPage(int pageNumber) {
+    public List<Car> getByPage(int pageNumber, List<Car> carList) {
         int start = pageNumber * 10;
         int end = start + 10;
 
@@ -100,5 +97,21 @@ public class CarService {
             end = carList.size();
         }
         return carList.subList(start, end);
+    }
+
+    public List<Car> filter(String key, String value) {
+        switch (key){
+            case "manufacturer" :
+                return getByManufacturer(value);
+            case "model":
+                return getByModel(value);
+            case "engineType":
+                return getByEngineType(value);
+            case "year" :
+                return getByYear(Integer.parseInt(value));
+//            case "page" :
+//                return getByPage(Integer.parseInt(value));
+        }
+        return null;
     }
 }
