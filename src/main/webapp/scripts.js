@@ -54,6 +54,10 @@ function loadCarsFromApi() {
         type: "GET",
         dataType: "json",
         data: {
+            "manufacturer" : filterManufacturer,
+            "model" : filterModel,
+            "year" : filterYear,
+            "engineType" : filterEngine,
             "page": currentPageLoaded++
         },
         success: function (data) {
@@ -73,21 +77,30 @@ function loadCarsFromApi() {
     })
 }
 
+function onEnteredFilter(){
+    currentPageLoaded = 0;
+    loadCarsFromApi();
+}
+
 $(document).ready(function () {
 
     $('input#filterInputManufacturer').on('change', function() {
-
+        filterManufacturer = this.value;
+        onEnteredFilter();
     });
 
     $('input#filterInputModel').on('change', function() {
-        alert( this.value );
+        filterModel = this.value;
+        onEnteredFilter();
     });
 
     $('select#filterYearSelect').on('change', function() {
-        alert( this.value );
+        filterYear = this.value;
+        onEnteredFilter();
     });
     $('select#filterEngineType').on('change', function() {
-        alert( this.value );
+        filterEngine = this.value;
+        onEnteredFilter();
     });
 
 

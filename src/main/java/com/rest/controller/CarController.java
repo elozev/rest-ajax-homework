@@ -29,22 +29,12 @@ public class CarController {
                             @DefaultValue("") @QueryParam("engineType") String engineType) {
 
 
-        //TODO : Save all params in a List
-        //TODO : Iritate through the list and check if param is null
-        //TODO : method witch accepts param and list
-
         if (manufacturer.equals("")
                 && model.equals("")
                 && year.equals("")
                 && engineType.equals("")
                 && page.equals("")) {
             return Response.ok(carService.getCarList()).build();
-//        } else if (!page.equals("")) {
-//            if (carService.getByPage(Integer.parseInt(page)) != null) {
-//                return Response.ok(carService.getByPage(Integer.parseInt(page))).build();
-//            }
-//            return Response.status(416).build();
-//        }
         } else {
             List<Car> filteredCars = new ArrayList<>(carService.getCarList());
             Map<String, String> filters = new HashMap<>();
