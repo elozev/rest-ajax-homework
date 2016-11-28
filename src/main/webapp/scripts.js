@@ -4,6 +4,7 @@
 
 var currentPageLoaded = 0;
 var isGettingRequest = true;
+var isEndOfTableReached = true;
 
 var filterManufacturer = "";
 var filterModel = "";
@@ -23,7 +24,9 @@ function addCar() {
             year: $('#yearSelect').val()
         }),
         success: function (newCar) {
-            loadIntoTable(newCar);
+            if(isEndOfTableReached){
+                loadIntoTable(newCar);
+            }
         },
         error: function () {
             alert("Such car already exists");
@@ -72,24 +75,51 @@ function loadCarsFromApi() {
             paragraph.append('<b>No more cars to load<b>');
             paragraph.append('</p>');
             $('#noMoreToLoad').append(paragraph);
-
+            isEndOfTableReached = true;
         }
     })
 }
 
 function onEnteredFilter(){
+    emptyTable();
     currentPageLoaded = 0;
     loadCarsFromApi();
+
+}
+
+function emptyTable() {
+    $("#carsTableBody").find("tr").remove();
+}
+
+var availableTags = [];
+function autocompleteSet(){
+    $.ajax({
+        url: "http://localhost:8080/rest-ajax-homework/api/cars/names",
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            availableTags = data;
+        },
+        error: function () {
+            availableTags = "ERROR LOADING AUTOCOMPLETE"
+        }
+    });
 }
 
 $(document).ready(function () {
 
-    $('input#filterInputManufacturer').on('change', function() {
+    autocompleteSet();
+
+    $( "#inputManufacturer").autocomplete({
+        source: availableTags
+    });
+
+    $('input#filterInputManufacturer').keyup(function() {
         filterManufacturer = this.value;
         onEnteredFilter();
     });
 
-    $('input#filterInputModel').on('change', function() {
+    $('input#filterInputModel').keyup(function() {
         filterModel = this.value;
         onEnteredFilter();
     });
@@ -120,7 +150,6 @@ $(document).ready(function () {
         }
     })
 });
-
 
 
 $(window).scroll(function () {

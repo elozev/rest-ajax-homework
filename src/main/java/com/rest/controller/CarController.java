@@ -2,6 +2,8 @@ package com.rest.controller;
 
 import com.rest.model.Car;
 import com.rest.service.CarService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -16,12 +18,16 @@ import java.util.Map;
  */
 
 @Path("/cars")
+@Api("Cars")
 public class CarController {
 
     private CarService carService = CarService.getInstance();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Returns all cars or filtered ones",
+            response = Car.class,
+            responseContainer = "List")
     public Response getCars(@DefaultValue("") @QueryParam("page") String page,
                             @DefaultValue("") @QueryParam("manufacturer") String manufacturer,
                             @DefaultValue("") @QueryParam("model") String model,
@@ -42,32 +48,45 @@ public class CarController {
             filters.put("model", model);
             filters.put("year", year);
             filters.put("engineType", engineType);
-            filters.put("page", page);
+            //filters.put("page", page);
 
 
             for (Map.Entry<String, String> entry : filters.entrySet()) {
                 if (!entry.getValue().equals("")) {
-                    if (!entry.getKey().equals("page"))
-                        filteredCars.retainAll(carService.filter(entry.getKey(), entry.getValue()));
-                    if (entry.getKey().equals("page"))
-                        filteredCars = carService.getByPage(Integer.parseInt(page), filteredCars);
+                    //      if (!entry.getKey().equals("page"))
+                    filteredCars = carService.filter(entry.getKey(), entry.getValue(), filteredCars);
+                    //        filteredCars = carService.getByPage(Integer.parseInt(page), filteredCars);
                 }
             }
+            if (!page.equals(""))
+                filteredCars = carService.getByPage(Integer.parseInt(page), filteredCars);
+
             return Response.ok(filteredCars).build();
         }
+    }
 
-
-        //return null;
+    @GET
+    @Path("/names")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Find manufacturers names",
+            response = Car.class,
+            responseContainer = "List")
+    public Response getCarManufacturers() {
+        return Response.ok(carService.getCarManufacturers()).build();
     }
 
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Car getCarById(@PathParam("id") String id) {
-        return carService.getById(Integer.parseInt(id) - 1);
+    @ApiOperation(value = "Find specific car by id",
+            response = Car.class)
+    public Response getCarById(@PathParam("id") String id) {
+        return Response.ok(carService.getById(Integer.parseInt(id) - 1)).build();
     }
 
     @POST
+    @ApiOperation(value = "Add Car",
+            response = Car.class)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addCar(Car car) {
@@ -76,6 +95,8 @@ public class CarController {
     }
 
     @PUT
+    @ApiOperation(value = "Update car",
+            response = Car.class)
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
@@ -85,6 +106,8 @@ public class CarController {
     }
 
     @DELETE
+    @ApiOperation(value = "Delete car",
+            response = Car.class)
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public String patchCar(@PathParam("id") String id) {

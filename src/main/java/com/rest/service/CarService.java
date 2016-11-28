@@ -34,7 +34,6 @@ public class CarService {
                     models[random.nextInt(models.length)],
                     engines[random.nextInt(engines.length)],
                     random.nextInt(2016 - 1900 + 1) + 1900));
-            System.out.println("Car List Size: " + carList.size());
         }
     }
 
@@ -71,47 +70,58 @@ public class CarService {
     }
 
 
-    public List<Car> getByManufacturer(String manufacturer) {
-        return carList.stream().filter(car -> car.getManufacturer().equals(manufacturer)).collect(Collectors.toList());
+    private List<Car> getByManufacturer(String manufacturer, List<Car> carList) {
+        return carList.stream().filter(car -> car.getManufacturer().toLowerCase().contains(manufacturer.toLowerCase())).collect(Collectors.toList());
     }
 
-    public List<Car> getByModel(String model) {
-        return carList.stream().filter(car -> car.getModel().equals(model)).collect(Collectors.toList());
+    private List<Car> getByModel(String model, List<Car> carList) {
+        return carList.stream().filter(car -> car.getModel().toLowerCase().contains(model.toLowerCase())).collect(Collectors.toList());
     }
 
-    public List<Car> getByEngineType(String engineType) {
+    private List<Car> getByEngineType(String engineType, List<Car> carList) {
         return carList.stream().filter(car -> car.getEngineType().equals(engineType)).collect(Collectors.toList());
     }
 
-    public List<Car> getByYear(int year) {
+    private List<Car> getByYear(int year, List<Car> carList) {
         return carList.stream().filter(car -> car.getYear() == year).collect(Collectors.toList());
     }
 
     public List<Car> getByPage(int pageNumber, List<Car> carList) {
         int start = pageNumber * 10;
         int end = start + 10;
+        System.out.println("start: " + start + "\nend: " + end);
 
-        if(end > carList.size() && start > carList.size()){
+        int i = 0;
+        for(Car car: carList){
+            System.out.println("id: " + i++ + " Car: " + car.toString());
+        }
+
+        if(end > carList.size() && start >= carList.size()){
+            System.out.println("null");
             return null;
         } else if(end > carList.size() && start < carList.size()){
+            System.out.println("not null    ");
             end = carList.size();
         }
-        return carList.subList(start, end);
+        List<Car> returnList = new ArrayList<>(carList.subList(start, end));
+        return returnList;
     }
 
-    public List<Car> filter(String key, String value) {
+    public List<Car> filter(String key, String value, List<Car> carList) {
         switch (key){
             case "manufacturer" :
-                return getByManufacturer(value);
+                return getByManufacturer(value, carList);
             case "model":
-                return getByModel(value);
+                return getByModel(value, carList);
             case "engineType":
-                return getByEngineType(value);
+                return getByEngineType(value, carList);
             case "year" :
-                return getByYear(Integer.parseInt(value));
-//            case "page" :
-//                return getByPage(Integer.parseInt(value));
+                return getByYear(Integer.parseInt(value), carList);
         }
         return null;
+    }
+
+    public List<String> getCarManufacturers() {
+        return carList.stream().map(Car::getManufacturer).distinct().collect(Collectors.toList());
     }
 }
