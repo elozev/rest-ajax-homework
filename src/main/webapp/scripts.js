@@ -27,6 +27,7 @@ function addCar() {
             if(isEndOfTableReached){
                 loadIntoTable(newCar);
             }
+            autocompleteSet();
         },
         error: function () {
             alert("Such car already exists");
@@ -91,14 +92,15 @@ function emptyTable() {
     $("#carsTableBody").find("tr").remove();
 }
 
-var availableTags = [];
 function autocompleteSet(){
     $.ajax({
         url: "http://localhost:8080/rest-ajax-homework/api/cars/names",
         type: "GET",
         dataType: "json",
         success: function (data) {
-            availableTags = data;
+            $( "#inputManufacturer").autocomplete({
+                source: data
+            });
         },
         error: function () {
             availableTags = "ERROR LOADING AUTOCOMPLETE"
@@ -109,10 +111,6 @@ function autocompleteSet(){
 $(document).ready(function () {
 
     autocompleteSet();
-
-    $( "#inputManufacturer").autocomplete({
-        source: availableTags
-    });
 
     $('input#filterInputManufacturer').keyup(function() {
         filterManufacturer = this.value;
